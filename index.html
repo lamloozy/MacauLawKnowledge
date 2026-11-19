@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b5e8a">
+<title>澳门外雇权益助手 | Macau Migrant Worker Rights | Direitos do Trabalhador Não Residente</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="外雇权益">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f6f9;
+    --card: #ffffff;
+    --text: #16202a;
+    --muted: #5c6b7a;
+    --duo-green: #16a34a;
+    --duo-green-dark: #15803d;
+    --duo-green-soft: #dcfce7;
+    --accent: #0b5e8a;
+    --accent-soft: #e6f1f8;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --border: #dce3ea;
+    --radius: 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans Myanmar", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 16px calc(56px + env(safe-area-inset-bottom));
+  }
+  .wrap { max-width: 600px; margin: 0 auto; }
+
+  /* 顶部与语言切换 */
+  header { padding: 24px 0 14px; text-align: center; }
+  header h1 {
+    font-size: 1.32rem; font-weight: 800;
+    color: var(--accent); letter-spacing: 0.01em;
+  }
+  header p { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+  .lang-bar {
+    display: flex; justify-content: center; gap: 7px;
+    margin-top: 14px; flex-wrap: wrap;
+  }
+  .lang-btn {
+    border: 2px solid var(--border); background: var(--card); color: var(--muted);
+    font-size: 0.78rem; font-weight: 700; padding: 6px 13px; border-radius: 999px;
+    cursor: pointer; transition: all .18s ease; font-family: inherit;
+  }
+  .lang-btn.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    box-shadow: 0 3px 0 #084464;
+  }
+
+  .notice {
+    background: var(--accent-soft); border-radius: 14px; padding: 12px 15px;
+    font-size: 0.78rem; color: var(--accent); margin-bottom: 18px; line-height: 1.55;
+    border: 1px solid #cde1ef;
+  }
+
+  /* 多邻国风格：3 个大板块 */
+  .modules-title {
+    font-size: 0.82rem; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;
+  }
+  .module-grid {
+    display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px;
+  }
+  .module-tile {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-bottom: 5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: transform .12s ease, border-color .15s ease;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .module-tile:hover {
+    border-color: #b7c6d4;
+    border-bottom-color: #9fb2c4;
+  }
+  .module-tile:active {
+    transform: translateY(2px);
+    border-bottom-width: 3px;
+  }
+  .module-badge {
+    width: 50px; height: 50px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0; font-weight: 800;
+  }
+  .badge-1 { background: #e0f2fe; color: #0369a1; border: 2px solid #bae6fd; }
+  .badge-2 { background: #fef3c7; color: #b45309; border: 2px solid #fde68a; }
+  .badge-3 { background: #dcfce7; color: #15803d; border: 2px solid #bbf7d0; }
+
+  .module-info { flex: 1; min-width: 0; }
+  .module-tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 800;
+    padding: 2px 8px; border-radius: 999px;
+    background: #eef2f6; color: var(--muted); margin-bottom: 4px;
+  }
+  .module-info h2 { font-size: 1.02rem; font-weight: 800; line-height: 1.3; }
+  .module-info .desc {
+    font-size: 0.8rem; color: var(--muted); margin-top: 4px; line-height: 1.45;
+  }
+  .module-cta {
+    background: var(--duo-green); color: #fff;
+    font-size: 0.76rem; font-weight: 800;
+    padding: 8px 12px; border-radius: 12px;
+    border-bottom: 3px solid var(--duo-green-dark);
+    flex-shrink: 0; white-space: nowrap;
+  }
+
+  /* 板块内解决步骤视图 */
+  #lessonView { display: none; }
+  #lessonView.active { display: block; }
+  #homeView.hidden { display: none; }
+
+  .top-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 14px;
+  }
+  .back-btn {
+    background: var(--card); border: 2px solid var(--border);
+    border-bottom: 4px solid var(--border);
+    color: var(--text); font-weight: 700; font-size: 0.8rem;
+    padding: 8px 13px; border-radius: 12px; cursor: pointer;
+    font-family: inherit; white-space: nowrap;
+  }
+  .back-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+  .progress-wrap {
+    flex: 1; height: 12px; background: #e2e8f0;
+    border-radius: 999px; overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%; width: 33%; background: var(--duo-green);
+    border-radius: 999px; transition: width .25s ease;
+  }
+  .step-counter {
+    font-size: 0.76rem; font-weight: 800; color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .lesson-header-card {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+  }
+  .lesson-header-card h2 { font-size: 1.08rem; font-weight: 800; color: var(--accent); }
+  .lesson-header-card p { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+
+  .sub-card {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+  }
+  .sub-title {
+    font-size: 0.96rem; font-weight: 800; margin-bottom: 10px;
+  }
+  .step-row {
+    display: flex; gap: 12px; padding: 11px 0;
+    border-top: 1px solid #eef2f6;
+  }
+  .step-row:first-of-type { border-top: none; padding-top: 4px; }
+  .step-pill {
+    font-size: 0.7rem; font-weight: 800;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 4px 8px; border-radius: 8px;
+    height: fit-content; min-width: 84px; text-align: center;
+    flex-shrink: 0;
+  }
+  .step-pill.warn { color: var(--warn); background: var(--warn-soft); }
+  .step-body { font-size: 0.86rem; flex: 1; min-width: 0; }
+  .step-body a {
+    color: var(--accent); font-weight: 700; text-decoration: none;
+    border-bottom: 1px solid rgba(11,94,138,.3);
+  }
+  .time-box {
+    background: var(--duo-green-soft); border: 1px solid #bbf7d0;
+    color: #14532d; border-radius: 10px; padding: 10px 12px;
+    font-size: 0.82rem; line-height: 1.55; margin-top: 4px;
+  }
+  .doc-list { list-style: none; }
+  .doc-list li {
+    position: relative; padding-left: 16px; margin-bottom: 4px;
+  }
+  .doc-list li::before {
+    content: "✓"; position: absolute; left: 0; top: 0;
+    color: var(--duo-green); font-weight: 800; font-size: 0.8rem;
+  }
+
+  .law-toggle {
+    display: inline-block; font-size: 0.76rem; font-weight: 700;
+    color: var(--accent); margin-top: 8px; cursor: pointer;
+    border-bottom: 1px dashed var(--accent);
+  }
+  .law-box {
+    display: none; margin-top: 8px; padding: 11px 13px;
+    background: #f8fafc; border-radius: 10px;
+    font-size: 0.78rem; color: var(--text); line-height: 1.6;
+    border-left: 4px solid var(--accent);
+  }
+  .law-box.show { display: block; }
+
+  .lesson-footer-actions {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .btn-next {
+    flex: 1; background: var(--duo-green); color: #fff;
+    border: none; border-bottom: 4px solid var(--duo-green-dark);
+    padding: 13px 16px; border-radius: 14px;
+    font-size: 0.88rem; font-weight: 800; cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-next:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+  /* 底部常用联络 */
+  .contact-bar {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    margin-top: 10px; font-size: 0.82rem;
+  }
+  .contact-bar h3 {
+    font-size: 0.8rem; font-weight: 800; color: var(--muted);
+    letter-spacing: 0.04em; margin-bottom: 10px;
+  }
+  .contact-row {
+    display: flex; gap: 10px; padding: 7px 0;
+    border-top: 1px solid #f0f3f6; align-items: baseline;
+  }
+  .contact-row:first-of-type { border-top: none; }
+  .contact-row .tag {
+    font-size: 0.72rem; font-weight: 700; color: var(--accent);
+    min-width: 96px; flex-shrink: 0;
+  }
+  .contact-row a { color: var(--accent); font-weight: 700; text-decoration: none; }
+
+  .footer-note {
+    text-align: center; font-size: 0.72rem; color: #8c99a6;
+    margin-top: 22px; line-height: 1.6;
+  }
+
+  /* ===== PWA 安装按钮 ===== */
+  #pwaInstallBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 999px;
+    background: var(--duo-green);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    border-bottom: 3px solid var(--duo-green-dark);
+  }
+  #pwaInstallBtn[hidden] { display: none; }
+  #pwaInstallBtn:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+  }
+
+  /* ===== iOS 安装引导浮层 ===== */
+  #iosInstallGuide {
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+    box-shadow: 0 -8px 30px rgba(0,0,0,.18);
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  #iosInstallGuide.show { display: block; }
+  #iosInstallGuide .guide-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    background: none; border: none;
+    font-size: 1.4rem; line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  #iosInstallGuide .guide-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+  #iosInstallGuide .guide-title {
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  #iosInstallGuide .guide-desc {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  #iosInstallGuide .guide-step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+    font-weight: 700;
+  }
+  #iosInstallGuide .guide-arrow {
+    color: var(--duo-green);
+    font-size: 1.2rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1 id="appTitle"></h1>
+    <p id="appSub"></p>
+    <div class="lang-bar">
+      <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">Tiếng Việt</button>
+      <button class="lang-btn" data-lang="my" onclick="setLang('my')">မြန်မာ</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+      <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">Português</button>
+    </div>
+    <button id="pwaInstallBtn" hidden onclick="handleInstallClick()"></button>
+  </header>
+
+  <div class="notice" id="noticeBox"></div>
+
+  <!-- 视图 1：多邻国风格三大板块 -->
+  <div id="homeView">
+    <div class="modules-title" id="modulesLabel"></div>
+    <div class="module-grid" id="moduleGrid"></div>
+  </div>
+
+  <!-- 视图 2：点击板块后进入的解决步骤 -->
+  <div id="lessonView">
+    <div class="top-nav">
+      <button class="back-btn" id="backBtn" onclick="goHome()"></button>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <span class="step-counter" id="stepCounter"></span>
+    </div>
+
+    <div class="lesson-header-card">
+      <h2 id="lessonTitle"></h2>
+      <p id="lessonDesc"></p>
+    </div>
+
+    <div id="lessonStepsContainer"></div>
+
+    <div class="lesson-footer-actions">
+      <button class="btn-next" id="nextModuleBtn" onclick="nextModule()"></button>
+    </div>
+  </div>
+
+  <!-- 底部联络 -->
+  <div class="contact-bar">
+    <h3 id="contactTitle"></h3>
+    <div id="contactRows"></div>
+  </div>
+
+  <div class="footer-note" id="footerNote"></div>
+
+</div>
+
+<!-- iOS 安装引导浮层 -->
+<div id="iosInstallGuide" role="dialog" aria-modal="true">
+  <button class="guide-close" onclick="closeIosGuide()" aria-label="关闭">×</button>
+  <div class="guide-icon">📲</div>
+  <div class="guide-title" id="iosGuideTitle"></div>
+  <div class="guide-desc" id="iosGuideDesc"></div>
+  <div class="guide-step" id="iosGuideStep1"></div>
+  <div class="guide-arrow">↓</div>
+  <div class="guide-step" id="iosGuideStep2"></div>
+</div>
+
+<script>
+const i18n = {
+  zh: {
+    appTitle: "澳门外雇权益助手",
+    appSub: "像闯关一样分三步：选问题 → 看步骤 → 查法条与机构",
+    notice: "以下内容依据澳门现行法律及劳工事务局公开服务承诺整理。支持中文、越南语、缅甸语、英文及葡文。",
+    modulesLabel: "选择你的情况（共 3 大板块）",
+    startBtn: "进入步骤 →",
+    backBtn: "← 返回板块",
+    nextModuleBtn: "完成本板块，前往下一板块 →",
+    allDoneBtn: "全部板块已浏览，返回首页 ✓",
+    lawShow: "查看法律条文与机构依据 ▾",
+    lawHide: "收起法律依据 ▴",
+    labels: {
+      who: "找谁",
+      docs: "带什么",
+      check: "先判断",
+      rule: "法律要点",
+      time: "多久有回音",
+      law: "法律与机构依据"
+    },
+    contactTitle: "关键联络与官方机构",
+    contacts: [
+      { tag: "劳工局热线", html: '<a href="tel:28717810">2871 7810</a>（劳工事务局 DSAL · 劳资咨询 / 投诉）' },
+      { tag: "劳工局地址", html: "澳门马揸度博士大马路 221–279 号先进广场" },
+      { tag: "出入境查询", html: '<a href="tel:28573333">2857 3333</a>（治安警察局出入境事务大楼 · 逗留许可）' },
+      { tag: "紧急求助", html: '<a href="tel:999">999</a>（紧急警务 / 救援）' }
+    ],
+    footerNote: "本页面仅为信息整理，不构成正式法律意见。个案情况可能不同，请以劳工事务局（DSAL）及治安警察局（CPSP）的正式答复为准。",
+    modules: [
+      {
+        id: "mod-wage-ticket",
+        badge: "1",
+        badgeClass: "badge-1",
+        tag: "板块 1 · 薪资与返程",
+        title: "欠薪 / 拖工资 & 回程机票谁出",
+        desc: "工资没到账、被拖欠，或劳动关系结束时回程机票由谁承担。",
+        cases: [
+          {
+            title: "情况 A：老板不付工资 / 拖工资",
+            who: "<strong>劳工事务局（DSAL）</strong><br>地址：澳门马揸度博士大马路 221–279 号先进广场<br>电话：<a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "身份证明文件正本 + 影印本",
+              "载有正确地址的文件（如水费单或电费单）",
+              "雇主名称、联络电话、联络地址"
+            ],
+            time: "<strong>20 分钟内</strong>接待并即时发《投诉回条》<br><strong>5 个工作天内</strong>短信/书面通知负责督察姓名和电话<br><strong>10 个工作天内</strong>通知处理结果",
+            law: "<strong>劳工事务局（DSAL）服务承诺（PS-1390）</strong>：20 分钟内接待投诉人；5 个工作天内通知负责督察姓名及联络电话；卷宗处理结果 10 个工作天内通知投诉人。投诉热线 2871 7810 亦接受劳资咨询，2 个工作天内电话回复。"
+          },
+          {
+            title: "情况 B：回程机票谁出钱",
+            who: "先向雇主提出；若不支付，向<strong>劳工事务局（DSAL）</strong>投诉：<a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "身份证明文件及蓝卡相关资料",
+              "劳动合同或终止劳动关系的相关记录"
+            ],
+            time: "劳动关系终止时即享有该法定权利；若雇主拒付向劳工局投诉，适用劳工局投诉处理流程（20 分钟接待、5 个工作天通知督察、10 个工作天通知结果）。",
+            law: "<strong>第 21/2009 号法律《聘用外地雇员法》第 26 条第 1 款及第 4 款</strong>：外地雇员在劳动关系终止时，有权要求雇主支付返回原居地的交通费。不论劳动关系以何种方式终止（合同期满、合理或不合理解雇、雇员主动解除），该权利均适用。"
+          }
+        ]
+      },
+      {
+        id: "mod-bluecard",
+        badge: "2",
+        badgeClass: "badge-2",
+        tag: "板块 2 · 蓝卡与解雇",
+        title: "被雇主解雇了，蓝卡怎么办",
+        desc: "合同未到期却被单方解雇，如何处理蓝卡与逗留许可状态。",
+        cases: [
+          {
+            title: "解雇后蓝卡与逗留许可处理步骤",
+            who: "1. <strong>先找劳工事务局（DSAL）</strong>开立个案、取得证明文件，电话：<a href=\"tel:28717810\">2871 7810</a><br>2. <strong>再向治安警察局出入境事务大楼（CPSP）</strong>查询逗留许可状态，电话：<a href=\"tel:28573333\">2857 3333</a>",
+            docs: [
+              "蓝卡（外地雇员身份认别证）正本",
+              "解雇通知或任何能证明劳动关系被单方终止的文件",
+              "身份证明文件"
+            ],
+            time: "逗留许可的具体剩余天数<strong>没有固定的“统一天数”</strong>，取决于蓝卡到期日与终止情形。关键是<strong>尽快去劳工局开立个案</strong>，拿到证明文件后向出入境确认是否属于“过大冷河”的例外情形。",
+            law: "<strong>第 21/2009 号法律《聘用外地雇员法》第 4 条</strong>：逗留许可被废止或失效后，原则上 6 个月内不获发新许可（“过大冷河”）。但合同失效、雇主不以合理理由解除合同、雇员以合理理由解除合同等情况<strong>不适用</strong>该限制；属雇主不合理辞退或雇员合理辞职者，需凭劳工局发出的证明文件作佐证。"
+          }
+        ]
+      },
+      {
+        id: "mod-agency",
+        badge: "3",
+        badgeClass: "badge-3",
+        tag: "板块 3 · 中介收费与退费",
+        title: "中介乱收费 / 试用期被炒不退钱",
+        desc: "介绍费是否超标或提前收，以及试用期被雇主单方解雇如何追回 50% 费用。",
+        cases: [
+          {
+            title: "情况 A：中介收了我太多钱 / 提前收钱",
+            who: "<strong>劳工事务局（DSAL）</strong>（投诉职业介绍所违规收费），电话：<a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "与职业介绍所签署的合同 / 收据",
+              "转账记录或付款证明（如有）",
+              "你的身份证明文件"
+            ],
+            check: "法定收费上限：<strong>不超过劳动合同首月基本报酬的 50%</strong>，且只能在劳动关系建立 <strong>60 天后</strong>一次性收取。在 60 天内收钱或超过 50% 均属违规。",
+            time: "适用劳工局一般投诉承诺：<strong>20 分钟内</strong>接待，<strong>5 个工作天内</strong>通知负责督察，<strong>10 个工作天内</strong>通知处理结果。",
+            law: "<strong>第 16/2020 号法律《职业介绍所业务法》</strong>：向雇员收取的服务费不得超过劳动合同首月基本报酬的 50%，且仅可在劳动关系建立 60 日后一次性收取；违规职业介绍所可被处罚。"
+          },
+          {
+            title: "情况 B：试用期被解雇，中介不退钱",
+            who: "<strong>劳工事务局（DSAL）</strong>，电话：<a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "中介收费收据",
+              "劳动合同",
+              "解雇通知（或证明雇主单方终止的文件）",
+              "向中介要求退费的书面通知记录（短信 / WhatsApp 截图亦可）"
+            ],
+            rule: "试用期内被雇主<strong>单方终止</strong>合同，中介<strong>必须</strong>退回或减收已收服务费的 <strong>50%</strong>，并在接到书面通知后 <strong>3 天内</strong>退回。",
+            time: "中介法定义务为<strong>3 天内</strong>退款；若不退并向劳工局投诉，适用一般承诺：<strong>20 分钟内</strong>接待、<strong>5 个工作天内</strong>通知督察、<strong>10 个工作天内</strong>通知结果。",
+            law: "<strong>第 16/2020 号法律《职业介绍所业务法》第 29 条及劳工局收费表范本</strong>：准照持有人须向被单方终止劳动合同者退回或减收 50% 服务费，并须在接获服务使用者<strong>书面通知之日起 3 日内</strong>退回已收取的费用。"
+          }
+        ]
+      }
+    ]
+  },
+
+  vi: {
+    appTitle: "Trợ Lý Quyền Lợi Lao Động Ma Cao",
+    appSub: "Chia 3 phần như học từng cấp: Chọn vấn đề → Xem bước → Tra luật & cơ quan",
+    notice: "Nội dung tổng hợp theo pháp luật hiện hành tại Ma Cao và cam kết dịch vụ của Sở Lao động và Việc làm (DSAL).",
+    modulesLabel: "Chọn tình huống của bạn (3 phần chính)",
+    startBtn: "Vào bước →",
+    backBtn: "← Về 3 phần",
+    nextModuleBtn: "Xong phần này, sang phần tiếp theo →",
+    allDoneBtn: "Đã xem hết 3 phần, về trang đầu ✓",
+    lawShow: "Xem căn cứ pháp luật & cơ quan ▾",
+    lawHide: "Ẩn căn cứ pháp luật ▴",
+    labels: {
+      who: "Tìm ai",
+      docs: "Mang gì",
+      check: "Kiểm tra trước",
+      rule: "Quy định luật",
+      time: "Bao lâu có phản hồi",
+      law: "Căn cứ pháp luật & cơ quan"
+    },
+    contactTitle: "Liên Hệ Quan Trọng & Cơ Quan Chính Thức",
+    contacts: [
+      { tag: "Hotline DSAL", html: '<a href="tel:28717810">2871 7810</a> (Sở Lao động và Việc làm · Tư vấn / Khiếu nại lao động)' },
+      { tag: "Địa chỉ DSAL", html: "Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Ma Cao" },
+      { tag: "Di trú CPSP", html: '<a href="tel:28573333">2857 3333</a> (Tòa nhà Di trú Cảnh sát Công an · Tình trạng cư trú)' },
+      { tag: "Khẩn cấp", html: '<a href="tel:999">999</a> (Cảnh sát / Cứu hộ khẩn cấp)' }
+    ],
+    footerNote: "Trang này chỉ mang tính tham khảo thông tin, không phải ý kiến pháp lý chính thức. Vui lòng đối chiếu phản hồi chính thức từ DSAL và CPSP.",
+    modules: [
+      {
+        id: "mod-wage-ticket",
+        badge: "1",
+        badgeClass: "badge-1",
+        tag: "Phần 1 · Lương & Vé về",
+        title: "Không trả / Trễ lương & Ai trả vé về nước",
+        desc: "Chưa nhận được lương, bị nợ lương hoặc chấm dứt hợp đồng thì ai trả vé về quê.",
+        cases: [
+          {
+            title: "Tình huống A: Chủ không trả lương / trả chậm",
+            who: "<strong>Sở Lao động và Việc làm (DSAL)</strong><br>Địa chỉ: Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Ma Cao<br>Điện thoại: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Giấy tờ tùy thân bản gốc + bản photo",
+              "Giấy tờ có địa chỉ đúng (ví dụ: hóa đơn nước hoặc hóa đơn điện)",
+              "Tên chủ sử dụng lao động, số điện thoại liên lạc, địa chỉ liên lạc"
+            ],
+            time: "Tiếp nhận trong <strong>20 phút</strong> và cấp ngay «Biên nhận khiếu nại»<br>Thông báo tên và số điện thoại thanh tra phụ trách qua SMS/văn bản trong <strong>5 ngày làm việc</strong><br>Thông báo kết quả xử lý trong <strong>10 ngày làm việc</strong>",
+            law: "<strong>Cam kết dịch vụ DSAL (PS-1390)</strong>: Tiếp nhận người khiếu nại trong 20 phút; thông báo tên và số điện thoại thanh tra phụ trách trong 5 ngày làm việc; thông báo kết quả hồ sơ trong 10 ngày làm việc. Đường dây nóng 2871 7810 cũng tư vấn lao động và phản hồi qua điện thoại trong 2 ngày làm việc."
+          },
+          {
+            title: "Tình huống B: Ai trả tiền vé máy bay về nước?",
+            who: "Đề nghị chủ trước; nếu không trả, khiếu nại tại <strong>Sở Lao động và Việc làm (DSAL)</strong>: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Giấy tờ tùy thân và thông tin liên quan đến Thẻ Xanh (Blue Card)",
+              "Hợp đồng lao động hoặc hồ sơ liên quan đến việc chấm dứt quan hệ lao động"
+            ],
+            time: "Quyền này phát sinh khi chấm dứt quan hệ lao động; nếu khiếu nại tại DSAL do chủ từ chối chi trả, áp dụng quy trình khiếu nại của DSAL (20 phút tiếp nhận, 5 ngày làm việc báo thanh tra, 10 ngày làm việc báo kết quả).",
+            law: "<strong>Khoản 1 và Khoản 4 Điều 26 Luật số 21/2009 «Luật Thuê Lao động Ngoại địa»</strong>: Lao động ngoại địa khi chấm dứt quan hệ lao động có quyền yêu cầu chủ chi trả chi phí đi lại về nơi cư trú gốc. Quyền này áp dụng bất kể quan hệ lao động chấm dứt theo hình thức nào (hết hạn hợp đồng, sa thải có hoặc không có lý do chính đáng, người lao động tự chấm dứt)."
+          }
+        ]
+      },
+      {
+        id: "mod-bluecard",
+        badge: "2",
+        badgeClass: "badge-2",
+        tag: "Phần 2 · Thẻ Xanh & Sa thải",
+        title: "Bị chủ sa thải, Thẻ Xanh (Blue Card) thì sao?",
+        desc: "Hợp đồng chưa hết hạn nhưng bị chủ đơn phương chấm dứt, xử lý Thẻ Xanh và cư trú thế nào.",
+        cases: [
+          {
+            title: "Các bước xử lý Thẻ Xanh & tình trạng cư trú sau khi bị sa thải",
+            who: "1. <strong>Đến DSAL trước</strong> để mở hồ sơ và lấy giấy xác nhận, ĐT: <a href=\"tel:28717810\">2871 7810</a><br>2. <strong>Sau đó hỏi Tòa nhà Di trú Cảnh sát Công an (CPSP)</strong> về tình trạng cư trú, ĐT: <a href=\"tel:28573333\">2857 3333</a>",
+            docs: [
+              "Bản gốc Thẻ Xanh (Thẻ nhận diện lao động ngoại địa)",
+              "Thông báo sa thải hoặc giấy tờ chứng minh quan hệ lao động bị chấm dứt đơn phương",
+              "Giấy tờ tùy thân"
+            ],
+            time: "Số ngày cư trú còn lại <strong>không có «một con số cố định chung»</strong>, tùy ngày hết hạn Thẻ Xanh và hoàn cảnh chấm dứt. Điều quan trọng là <strong>nhanh chóng mở hồ sơ tại DSAL</strong>, nhận giấy xác nhận rồi hỏi Di trú xem có thuộc trường hợp ngoại lệ của thời hạn 6 tháng không.",
+            law: "<strong>Điều 4 Luật số 21/2009 «Luật Thuê Lao động Ngoại địa»</strong>: Sau khi giấy phép cư trú bị hủy hoặc hết hiệu lực, nguyên tắc không cấp mới trong 6 tháng. Tuy nhiên, các trường hợp hợp đồng hết hạn, chủ chấm dứt hợp đồng không có lý do chính đáng, người lao động chấm dứt hợp đồng có lý do chính đáng... <strong>không bị áp dụng</strong> hạn chế này; nếu thuộc diện bị chủ sa thải không chính đáng hoặc tự chấm dứt chính đáng, cần có giấy xác nhận do DSAL cấp làm căn cứ."
+          }
+        ]
+      },
+      {
+        id: "mod-agency",
+        badge: "3",
+        badgeClass: "badge-3",
+        tag: "Phần 3 · Phí môi giới & Hoàn tiền",
+        title: "Môi giới thu quá nhiều / Thử việc bị đuổi không hoàn tiền",
+        desc: "Kiểm tra phí môi giới có vượt mức hoặc thu sớm không, và đòi lại 50% phí khi bị đuổi trong thử việc.",
+        cases: [
+          {
+            title: "Tình huống A: Công ty môi giới thu quá nhiều / thu quá sớm",
+            who: "<strong>Sở Lao động và Việc làm (DSAL)</strong> (khiếu nại công ty môi giới thu phí sai quy định), ĐT: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Hợp đồng / biên lai ký với công ty môi giới",
+              "Sao kê chuyển khoản hoặc chứng từ thanh toán (nếu có)",
+              "Giấy tờ tùy thân của bạn"
+            ],
+            check: "Trần phí theo luật: <strong>không vượt quá 50% lương cơ bản tháng đầu tiên</strong> của hợp đồng lao động, và chỉ được thu một lần <strong>sau 60 ngày</strong> kể từ khi thiết lập quan hệ lao động. Thu trong 60 ngày hoặc vượt 50% là vi phạm.",
+            time: "Áp dụng cam kết khiếu nại chung của DSAL: tiếp nhận trong <strong>20 phút</strong>, thông báo thanh tra phụ trách trong <strong>5 ngày làm việc</strong>, thông báo kết quả trong <strong>10 ngày làm việc</strong>.",
+            law: "<strong>Luật số 16/2020 «Luật Hoạt động Công ty Giới thiệu Việc làm»</strong>: Phí dịch vụ thu của người lao động không được vượt quá 50% lương cơ bản tháng đầu của hợp đồng lao động, và chỉ được thu một lần sau 60 ngày kể từ khi xác lập quan hệ lao động; công ty môi giới vi phạm quy định thu phí có thể bị xử phạt."
+          },
+          {
+            title: "Tình huống B: Bị sa thải trong thời gian thử việc, môi giới không hoàn tiền",
+            who: "<strong>Sở Lao động và Việc làm (DSAL)</strong>, ĐT: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Biên lai thu phí của công ty môi giới",
+              "Hợp đồng lao động",
+              "Thông báo sa thải (hoặc giấy tờ chứng minh chủ chấm dứt đơn phương)",
+              "Bằng chứng thông báo yêu cầu hoàn tiền bằng văn bản gửi môi giới (có thể là ảnh chụp SMS / WhatsApp)"
+            ],
+            rule: "Nếu bị chủ <strong>đơn phương chấm dứt</strong> hợp đồng trong thời gian thử việc, công ty môi giới <strong>bắt buộc</strong> phải hoàn trả hoặc giảm <strong>50%</strong> phí dịch vụ đã thu, và phải hoàn trả trong vòng <strong>3 ngày</strong> kể từ khi nhận thông báo bằng văn bản.",
+            time: "Nghĩa vụ pháp lý của môi giới là hoàn tiền trong <strong>3 ngày</strong>; nếu không hoàn và bạn khiếu nại DSAL, áp dụng cam kết chung: <strong>20 phút</strong> tiếp nhận, <strong>5 ngày làm việc</strong> báo thanh tra, <strong>10 ngày làm việc</strong> báo kết quả.",
+            law: "<strong>Điều 29 Luật số 16/2020 «Luật Hoạt động Công ty Giới thiệu Việc làm» và biểu phí mẫu của DSAL</strong>: Người giữ giấy phép phải hoàn trả hoặc giảm 50% phí dịch vụ cho người bị chấm dứt hợp đồng lao động đơn phương, và phải hoàn trả phí đã thu trong vòng <strong>3 ngày</strong> kể từ ngày nhận được thông báo bằng văn bản của người sử dụng dịch vụ."
+          }
+        ]
+      }
+    ]
+  },
+
+  my: {
+    appTitle: "မကာအို ရွှေ့ပြောင်းအလုပ်သမား အခွင့်အရေး လမ်းညွှန်",
+    appSub: "အဆင့်ဆင့် သွားရန် ၃ ပိုင်းခွဲထားသည်- ပြဿနာရွေး → အဆင့်ကြည့် → ဥပဒေနှင့် ဌာနရှာ",
+    notice: "ဤအချက်အလက်များကို မကာအို လက်ရှိဥပဒေများနှင့် အလုပ်သမားရေးရာဗျူရို (DSAL) ၏ ဝန်ဆောင်မှုကတိကဝတ်များအပေါ် အခြေခံ၍ စုစည်းထားပါသည်။",
+    modulesLabel: "သင့်အခြေအနေကို ရွေးပါ (အပိုင်း ၃ ပိုင်း)",
+    startBtn: "အဆင့်များသို့ →",
+    backBtn: "← အပိုင်း ၃ ခုသို့",
+    nextModuleBtn: "ဤအပိုင်းပြီးပါပြီ၊ နောက်အပိုင်းသို့ →",
+    allDoneBtn: "အပိုင်းအားလုံး ကြည့်ပြီးပါပြီ၊ ပင်မစာမျက်နှာသို့ ✓",
+    lawShow: "ဥပဒေပြဋ္ဌာန်းချက်နှင့် ဌာနအချက်အလက် ကြည့်ရန် ▾",
+    lawHide: "ဥပဒေအချက်အလက် ပိတ်ရန် ▴",
+    labels: {
+      who: "ဘယ်သူ့ကိုဆက်သွယ်မလဲ",
+      docs: "ဘာတွေယူသွားရမလဲ",
+      check: "ဦးစွာစစ်ဆေးရန်",
+      rule: "ဥပဒေအချက်အလက်",
+      time: "ဘယ်လောက်ကြာမလဲ",
+      law: "ဥပဒေနှင့် ဌာနအခြေခံ"
+    },
+    contactTitle: "အဓိက ဆက်သွယ်ရန်နှင့် တရားဝင်ဌာနများ",
+    contacts: [
+      { tag: "DSAL ဖုန်း", html: '<a href="tel:28717810">2871 7810</a> (အလုပ်သမားရေးရာဗျူရို · အလုပ်သမားမေးမြန်း / တိုင်ကြား)' },
+      { tag: "DSAL လိပ်စာ", html: "Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Macau" },
+      { tag: "လူဝင်မှုကြီးကြပ်ရေး", html: '<a href="tel:28573333">2857 3333</a> (ရဲတပ်ဖွဲ့ လူဝင်မှုကြီးကြပ်ရေးဌာန · နေထိုင်ခွင့်အခြေအနေ)' },
+      { tag: "အရေးပေါ်", html: '<a href="tel:999">999</a> (အရေးပေါ် ရဲ / ကယ်ဆယ်ရေး)' }
+    ],
+    footerNote: "ဤစာမျက်နှာသည် သတင်းအချက်အလက် စုစည်းမှုသာဖြစ်ပြီး တရားဝင်ဥပဒေအကြံဉာဏ် မဟုတ်ပါ။ DSAL နှင့် CPSP တို့၏ တရားဝင်အဖြေကို အတည်ပြုပါ။",
+    modules: [
+      {
+        id: "mod-wage-ticket",
+        badge: "၁",
+        badgeClass: "badge-1",
+        tag: "အပိုင်း ၁ · လစာနှင့် အပြန်လက်မှတ်",
+        title: "လစာမပေး / နောက်ကျပေးခြင်း နှင့် အပြန်လက်မှတ်ခ",
+        desc: "လစာမရသေးခြင်း၊ နောက်ကျခြင်း သို့မဟုတ် အလုပ်ပြီးဆုံးချိန် အပြန်လက်မှတ်ခ ဘယ်သူပေးရမည်။",
+        cases: [
+          {
+            title: "အခြေအနေ က - အလုပ်ရှင်က လစာမပေး / နောက်ကျပေးသည်",
+            who: "<strong>အလုပ်သမားရေးရာဗျူရို (DSAL)</strong><br>လိပ်စာ - Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Macau<br>ဖုန်း - <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "မူရင်း မှတ်ပုံတင်/နိုင်ငံကူးလက်မှတ် + မိတ္တူ",
+              "လိပ်စာမှန်ကန်ကြောင်း စာရွက်စာတမ်း (ဥပမာ - ရေခွန် သို့မဟုတ် လျှပ်စစ်မီတာဘေလ်)",
+              "အလုပ်ရှင်အမည်၊ ဖုန်းနံပါတ်၊ ဆက်သွယ်ရန်လိပ်စာ"
+            ],
+            time: "<strong>၂၀ မိနစ်အတွင်း</strong> လက်ခံတွေ့ဆုံပြီး «တိုင်ကြားမှုပြေစာ» ချက်ချင်းထုတ်ပေးသည်<br><strong>အလုပ်ဖွင့်ရက် ၅ ရက်အတွင်း</strong> တာဝန်ကျစစ်ဆေးရေးမှူး၏ အမည်နှင့် ဖုန်းကို SMS/စာဖြင့် အကြောင်းကြားသည်<br><strong>အလုပ်ဖွင့်ရက် ၁၀ ရက်အတွင်း</strong> ဆောင်ရွက်ချက်ရလဒ်ကို အကြောင်းကြားသည်",
+            law: "<strong>DSAL ဝန်ဆောင်မှုကတိကဝတ် (PS-1390)</strong> - တိုင်ကြားသူကို ၂၀ မိနစ်အတွင်း လက်ခံတွေ့ဆုံခြင်း၊ အလုပ်ဖွင့်ရက် ၅ ရက်အတွင်း တာဝန်ကျစစ်ဆေးရေးမှူးအမည်နှင့် ဖုန်းအသိပေးခြင်း၊ ဖိုင်ဆောင်ရွက်မှုရလဒ်ကို အလုပ်ဖွင့်ရက် ၁၀ ရက်အတွင်း အသိပေးခြင်း။ ဖုန်း 2871 7810 မှလည်း မေးမြန်းနိုင်ပြီး အလုပ်ဖွင့်ရက် ၂ ရက်အတွင်း ပြန်လည်ဆက်သွယ်ပါသည်။"
+          },
+          {
+            title: "အခြေအနေ ခ - အပြန်လေယာဉ်လက်မှတ် ဘယ်သူကျခံမလဲ",
+            who: "အလုပ်ရှင်ထံ ဦးစွာတောင်းဆိုပါ။ မပေးပါက <strong>အလုပ်သမားရေးရာဗျူရို (DSAL)</strong> သို့ တိုင်ကြားပါ - <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "အထောက်အထားစာရွက်စာတမ်းနှင့် Blue Card ဆိုင်ရာ အချက်အလက်များ",
+              "အလုပ်ခန့်စာချုပ် သို့မဟုတ် အလုပ်ဆက်ဆံရေး ပြီးဆုံးကြောင်း အထောက်အထား"
+            ],
+            time: "အလုပ်ဆက်ဆံရေး ပြီးဆုံးချိန်တွင် ဤဥပဒေအခွင့်အရေး ရရှိသည်။ အလုပ်ရှင်က ငြင်းဆို၍ DSAL သို့ တိုင်ကြားပါက DSAL တိုင်ကြားမှုလုပ်ငန်းစဉ်အတိုင်း ဆောင်ရွက်ပါသည်။",
+            law: "<strong>ဥပဒေအမှတ် 21/2009 «ပြည်ပအလုပ်သမား ခန့်ထားရေးဥပဒေ» ပုဒ်မ ၂၆ (၁) နှင့် (၄)</strong> - ပြည်ပအလုပ်သမားသည် အလုပ်ဆက်ဆံရေး ပြီးဆုံးချိန်တွင် နေရပ်ပြန်ခရီးစရိတ်ကို အလုပ်ရှင်ထံမှ တောင်းဆိုပိုင်ခွင့် ရှိသည်။ စာချုပ်သက်တမ်းကုန်ခြင်း၊ ကျိုးကြောင်းရှိ/မရှိ အလုပ်ထုတ်ခြင်း၊ အလုပ်သမားက ကိုယ်တိုင်ရပ်စဲခြင်း မည်သည့်နည်းဖြင့် ပြီးဆုံးသည်ဖြစ်စေ ဤအခွင့်အရေး အကျုံးဝင်သည်။"
+          }
+        ]
+      },
+      {
+        id: "mod-bluecard",
+        badge: "၂",
+        badgeClass: "badge-2",
+        tag: "အပိုင်း ၂ · Blue Card နှင့် အလုပ်ထုတ်ခံရခြင်း",
+        title: "အလုပ်ရှင်က အလုပ်ထုတ်လိုက်ရင် Blue Card ဘယ်လိုလုပ်မလဲ",
+        desc: "စာချုပ်သက်တမ်း မကုန်သေးဘဲ တစ်ဖက်သတ် အလုပ်ထုတ်ခံရလျှင် Blue Card နှင့် နေထိုင်ခွင့်အခြေအနေကို မည်သို့ကိုင်တွယ်မည်။",
+        cases: [
+          {
+            title: "အလုပ်ထုတ်ခံရပြီးနောက် Blue Card နှင့် နေထိုင်ခွင့် ဆောင်ရွက်ရန်အဆင့်များ",
+            who: "၁။ <strong>DSAL သို့ ဦးစွာသွားရောက်ပြီး</strong> အမှုဖွင့်၍ ထောက်ခံစာယူပါ၊ ဖုန်း - <a href=\"tel:28717810\">2871 7810</a><br>၂။ <strong>ထို့နောက် လူဝင်မှုကြီးကြပ်ရေးဌာန (CPSP)</strong> တွင် နေထိုင်ခွင့်အခြေအနေကို စုံစမ်းပါ၊ ဖုန်း - <a href=\"tel:28573333\">2857 3333</a>",
+            docs: [
+              "မူရင်း Blue Card (ပြည်ပအလုပ်သမား အထောက်အထားကတ်)",
+              "အလုပ်ထုတ်စာ သို့မဟုတ် တစ်ဖက်သတ် ရပ်ဆိုင်းကြောင်း ပြသည့် စာရွက်စာတမ်း",
+              "အထောက်အထားစာရွက်စာတမ်း"
+            ],
+            time: "ကျန်ရှိနေထိုင်ခွင့်ရက်သည် <strong>«တစ်ပြေးညီ ရက်အရေအတွက် သတ်မှတ်ချက် မရှိပါ»</strong>၊ Blue Card သက်တမ်းကုန်ရက်နှင့် အခြေအနေအပေါ် မူတည်သည်။ <strong>DSAL တွင် အမြန်ဆုံး အမှုဖွင့်ပြီး</strong> ထောက်ခံစာရယူကာ ၆ လ ကန့်သတ်ချက် ကင်းလွတ်ခွင့်ရှိ/မရှိ လူဝင်မှုကြီးကြပ်ရေးတွင် အတည်ပြုပါ။",
+            law: "<strong>ဥပဒေအမှတ် 21/2009 «ပြည်ပအလုပ်သမား ခန့်ထားရေးဥပဒေ» ပုဒ်မ ၄</strong> - နေထိုင်ခွင့် ပယ်ဖျက်ခံရခြင်း သို့မဟုတ် သက်တမ်းကုန်ဆုံးပြီးနောက် မူအားဖြင့် ၆ လအတွင်း ခွင့်ပြုချက်အသစ် မရနိုင်ပါ။ သို့သော် စာချုပ်သက်တမ်းကုန်ခြင်း၊ အလုပ်ရှင်က ကျိုးကြောင်းမဲ့ စာချုပ်ဖျက်သိမ်းခြင်း၊ အလုပ်သမားက ကျိုးကြောင်းရှိ၍ စာချုပ်ဖျက်သိမ်းခြင်း စသည်တို့တွင် ဤကန့်သတ်ချက် <strong>မသက်ဆိုင်ပါ</strong>။ ကျိုးကြောင်းမဲ့ အလုပ်ထုတ်ခံရခြင်း သို့မဟုတ် ကျိုးကြောင်းရှိ၍ နှုတ်ထွက်ခြင်းဖြစ်ပါက DSAL ထောက်ခံစာ လိုအပ်သည်။"
+          }
+        ]
+      },
+      {
+        id: "mod-agency",
+        badge: "၃",
+        badgeClass: "badge-3",
+        tag: "အပိုင်း ၃ · ပွဲစားခနှင့် ငွေပြန်အမ်းခြင်း",
+        title: "ပွဲစားခ အလွန်အကျွံယူခြင်း / စမ်းသပ်ကာလ အလုပ်ထုတ်ခံရပြီး ငွေမပြန်ပေးခြင်း",
+        desc: "ပွဲစားခ များနေ/စောယူနေသလား စစ်ဆေးရန်နှင့် စမ်းသပ်ကာလအတွင်း အလုပ်ထုတ်ခံရပါက ၅၀% ပြန်တောင်းရန်။",
+        cases: [
+          {
+            title: "အခြေအနေ က - အလုပ်အကိုင် ပွဲစားက ငွေအလွန်အကျွံယူသည် / စောယူသည်",
+            who: "<strong>အလုပ်သမားရေးရာဗျူရို (DSAL)</strong> (ပွဲစားခ စည်းကမ်းဖောက်ဖျက်မှု တိုင်ကြားရန်)၊ ဖုန်း - <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "အလုပ်အကိုင်အေဂျင်စီနှင့် ချုပ်ဆိုထားသော စာချုပ် / ပြေစာ",
+              "ဘဏ်လွှဲမှတ်တမ်း သို့မဟုတ် ငွေပေးချေမှု အထောက်အထား (ရှိပါက)",
+              "သင့်အထောက်အထားစာရွက်စာတမ်း"
+            ],
+            check: "ဥပဒေအရ အများဆုံးကောက်ခံနိုင်ခွင့် - အလုပ်ခန့်စာချုပ်ပါ <strong>ပထမလ အခြေခံလစာ၏ ၅၀% ထက်မပိုရ</strong>၊ အလုပ်ဆက်ဆံရေး စတင်ပြီး <strong>ရက် ၆၀ ပြည့်ပြီးမှသာ</strong> တစ်ကြိမ်တည်း ကောက်ခံရမည်။ ရက် ၆၀ မပြည့်မီ ကောက်ခံခြင်း သို့မဟုတ် ၅၀% ကျော်ခြင်းသည် ဥပဒေချိုးဖောက်မှုဖြစ်သည်။",
+            time: "DSAL ပုံမှန်တိုင်ကြားမှု ကတိကဝတ်အတိုင်း - <strong>၂၀ မိနစ်အတွင်း</strong> တွေ့ဆုံခြင်း၊ <strong>အလုပ်ဖွင့်ရက် ၅ ရက်အတွင်း</strong> စစ်ဆေးရေးမှူးအား အသိပေးခြင်း၊ <strong>အလုပ်ဖွင့်ရက် ၁၀ ရက်အတွင်း</strong> ရလဒ်အသိပေးခြင်း။",
+            law: "<strong>ဥပဒေအမှတ် 16/2020 «အလုပ်အကိုင်အေဂျင်စီ လုပ်ငန်းဥပဒေ»</strong> - အလုပ်သမားထံမှ ကောက်ခံသည့် ဝန်ဆောင်မှုခသည် အလုပ်ခန့်စာချုပ်ပါ ပထမလ အခြေခံလစာ၏ ၅၀% ထက် မကျော်လွန်ရ၊ အလုပ်ဆက်ဆံရေး စတင်ပြီး ၆၀ ရက်ပြည့်ပြီးနောက်မှသာ တစ်ကြိမ်တည်း ကောက်ခံခွင့်ရှိပြီး ချိုးဖောက်ပါက အရေးယူခံရမည်။"
+          },
+          {
+            title: "အခြေအနေ ခ - စမ်းသပ်ကာလအတွင်း အလုပ်ထုတ်ခံရပြီး ပွဲစားက ငွေမပြန်ပေး",
+            who: "<strong>အလုပ်သမားရေးရာဗျူရို (DSAL)</strong>၊ ဖုန်း - <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "ပွဲစားခ ပြေစာ",
+              "အလုပ်ခန့်စာချုပ်",
+              "အလုပ်ထုတ်စာ (သို့မဟုတ် အလုပ်ရှင်က တစ်ဖက်သတ် ရပ်ဆိုင်းကြောင်း အထောက်အထား)",
+              "ငွေပြန်အမ်းရန် စာဖြင့် အကြောင်းကြားထားသည့် မှတ်တမ်း (SMS / WhatsApp ဓာတ်ပုံလည်း ပါဝင်နိုင်သည်)"
+            ],
+            rule: "စမ်းသပ်ကာလအတွင်း အလုပ်ရှင်က <strong>တစ်ဖက်သတ် ရပ်ဆိုင်း</strong>ပါက ပွဲစားသည် ကောက်ခံပြီး ဝန်ဆောင်မှုခ၏ <strong>၅၀%</strong> ကို <strong>မဖြစ်မနေ</strong> ပြန်အမ်းရမည် သို့မဟုတ် လျှော့ပေါ့ရမည်ဖြစ်ပြီး စာဖြင့် အကြောင်းကြားချက် လက်ခံရရှိပြီး <strong>၃ ရက်အတွင်း</strong> ပြန်အမ်းရမည်။",
+            time: "ပွဲစား၏ ဥပဒေတာဝန်မှာ <strong>၃ ရက်အတွင်း</strong> ပြန်အမ်းရန်ဖြစ်သည်။ မပြန်အမ်းဘဲ DSAL သို့ တိုင်ကြားပါက ပုံမှန်ကတိကဝတ်အတိုင်း <strong>၂၀ မိနစ်</strong> တွေ့ဆုံခြင်း၊ <strong>အလုပ်ဖွင့်ရက် ၅ ရက်</strong> စစ်ဆေးရေးမှူးအသိပေးခြင်း၊ <strong>အလုပ်ဖွင့်ရက် ၁၀ ရက်</strong> ရလဒ်အသိပေးခြင်း ဖြစ်သည်။",
+            law: "<strong>ဥပဒေအမှတ် 16/2020 «အလုပ်အကိုင်အေဂျင်စီ လုပ်ငန်းဥပဒေ» ပုဒ်မ ၂၉ နှင့် DSAL နှုန်းထားစာရွက်စံနမူနာ</strong> - လိုင်စင်ရရှိသူသည် အလုပ်ခန့်စာချုပ် တစ်ဖက်သတ် ရပ်ဆိုင်းခံရသူအား ဝန်ဆောင်မှုခ၏ ၅၀% ကို ပြန်အမ်းရမည် သို့မဟုတ် လျှော့ပေါ့ပေးရမည်ဖြစ်ပြီး ဝန်ဆောင်မှုအသုံးပြုသူထံမှ <strong>စာဖြင့် အကြောင်းကြားချက် လက်ခံရရှိသည့်နေ့မှ ၃ ရက်အတွင်း</strong> ကောက်ခံပြီးငွေကို ပြန်အမ်းရမည်။"
+          }
+        ]
+      }
+    ]
+  },
+
+  en: {
+    appTitle: "Macau Migrant Worker Rights Guide",
+    appSub: "3 step-by-step modules: Pick issue → Follow steps → Check law & authority",
+    notice: "Compiled based on current Macao laws and public service pledges of the Labour Affairs Bureau (DSAL). Available in Chinese, Vietnamese, Burmese, English, and Portuguese.",
+    modulesLabel: "Choose your situation (3 modules)",
+    startBtn: "Start steps →",
+    backBtn: "← All modules",
+    nextModuleBtn: "Complete & go to next module →",
+    allDoneBtn: "All modules reviewed, return home ✓",
+    lawShow: "View legal basis & authority ▾",
+    lawHide: "Hide legal basis ▴",
+    labels: {
+      who: "Who to contact",
+      docs: "What to bring",
+      check: "Key check",
+      rule: "Legal rule",
+      time: "Response timeline",
+      law: "Legal & institutional basis"
+    },
+    contactTitle: "Key Contacts & Official Authorities",
+    contacts: [
+      { tag: "DSAL Hotline", html: '<a href="tel:28717810">2871 7810</a> (Labour Affairs Bureau · Labour inquiry / complaint)' },
+      { tag: "DSAL Address", html: "Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Macao" },
+      { tag: "Immigration", html: '<a href="tel:28573333">2857 3333</a> (Public Security Police Force Immigration Building · Stay permit)' },
+      { tag: "Emergency", html: '<a href="tel:999">999</a> (Emergency police / rescue)' }
+    ],
+    footerNote: "For information reference only; not formal legal advice. Individual cases vary—please rely on official replies from DSAL and CPSP.",
+    modules: [
+      {
+        id: "mod-wage-ticket",
+        badge: "1",
+        badgeClass: "badge-1",
+        tag: "Module 1 · Wages & Return Ticket",
+        title: "Unpaid / Late Wages & Who Pays Return Ticket",
+        desc: "Salary not paid or delayed, and who covers return transport when employment ends.",
+        cases: [
+          {
+            title: "Case A: Employer does not pay / delays wages",
+            who: "<strong>Labour Affairs Bureau (DSAL)</strong><br>Address: Advance Plaza, Av. Dr. Francisco Vieira Machado 221–279, Macao<br>Tel: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Original ID/passport + photocopy",
+              "Document showing correct address (e.g., water or electricity bill)",
+              "Employer's name, contact phone number, and contact address"
+            ],
+            time: "Received within <strong>20 minutes</strong> with immediate «Complaint Receipt»<br>Inspector's name and phone sent via SMS/writing within <strong>5 working days</strong><br>Case outcome notified within <strong>10 working days</strong>",
+            law: "<strong>DSAL Service Pledge (PS-1390)</strong>: Complainants received within 20 minutes; responsible inspector's name and phone notified within 5 working days; case handling result notified within 10 working days. Hotline 2871 7810 also handles labour inquiries with phone reply within 2 working days."
+          },
+          {
+            title: "Case B: Who pays for the return ticket home?",
+            who: "Request from the employer first; if unpaid, file a complaint with <strong>DSAL</strong>: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "ID document and Blue Card details",
+              "Employment contract or records showing termination of employment"
+            ],
+            time: "Entitlement arises upon termination of employment; if filing a complaint with DSAL over non-payment, DSAL's standard complaint timeline applies (20 min reception, 5 working days inspector notice, 10 working days result notice).",
+            law: "<strong>Article 26(1) and (4) of Law No. 21/2009 (Law on the Hiring of Non-resident Workers)</strong>: Non-resident workers have the right upon termination of employment to require the employer to pay transport expenses back to their place of origin, regardless of how employment ends (expiry, dismissal with or without just cause, or resignation by the worker)."
+          }
+        ]
+      },
+      {
+        id: "mod-bluecard",
+        badge: "2",
+        badgeClass: "badge-2",
+        tag: "Module 2 · Blue Card & Dismissal",
+        title: "Dismissed by employer: what about my Blue Card?",
+        desc: "Unilaterally dismissed before contract expiry—how to handle your Blue Card and stay status.",
+        cases: [
+          {
+            title: "Steps for Blue Card & stay status after dismissal",
+            who: "1. <strong>Go to DSAL first</strong> to open a case and obtain supporting certification, Tel: <a href=\"tel:28717810\">2871 7810</a><br>2. <strong>Then check stay permit status with CPSP Immigration Building</strong>, Tel: <a href=\"tel:28573333\">2857 3333</a>",
+            docs: [
+              "Original Blue Card (Non-resident Worker Identification Card)",
+              "Dismissal notice or any document proving unilateral termination",
+              "Identification document"
+            ],
+            time: "Remaining stay days have <strong>no single fixed number of days</strong> across all cases; they depend on your Blue Card expiry date and termination circumstances. Key action: <strong>open a case with DSAL promptly</strong>, get certification, and confirm with Immigration whether an exception to the 6-month restriction applies.",
+            law: "<strong>Article 4 of Law No. 21/2009 (Law on the Hiring of Non-resident Workers)</strong>: After a stay permit is revoked or expires, a new permit is generally not granted for 6 months. However, exceptions apply (such as contract expiry, termination by employer without just cause, or termination by worker with just cause); for dismissal without just cause or termination with just cause by the worker, certification issued by DSAL serves as supporting proof."
+          }
+        ]
+      },
+      {
+        id: "mod-agency",
+        badge: "3",
+        badgeClass: "badge-3",
+        tag: "Module 3 · Agency Fees & Refunds",
+        title: "Overcharged by agency / Fired in probation with no refund",
+        desc: "Check fee limits and timing, and claim a 50% refund if unilaterally dismissed during probation.",
+        cases: [
+          {
+            title: "Case A: Agency charged me too much / charged too early",
+            who: "<strong>Labour Affairs Bureau (DSAL)</strong> (complaint against employment agency fee violation), Tel: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Contract / receipt signed with the employment agency",
+              "Transfer records or payment proof (if any)",
+              "Your identification document"
+            ],
+            check: "Statutory fee cap: <strong>no more than 50% of the first month's basic remuneration</strong> under the employment contract, charged only once <strong>after 60 days</strong> from establishment of the employment relationship. Charging within 60 days or over 50% is a violation.",
+            time: "Follows DSAL's general complaint pledge: received within <strong>20 minutes</strong>, inspector notified within <strong>5 working days</strong>, outcome notified within <strong>10 working days</strong>.",
+            law: "<strong>Law No. 16/2020 (Employment Agency Licensing Law)</strong>: Service fees charged to workers may not exceed 50% of the first month's basic remuneration in the employment contract and may only be collected once after 60 days from establishment of the employment relationship; violations are subject to penalties."
+          },
+          {
+            title: "Case B: Dismissed during probation, agency refuses refund",
+            who: "<strong>Labour Affairs Bureau (DSAL)</strong>, Tel: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Agency fee receipt",
+              "Employment contract",
+              "Dismissal notice (or proof of unilateral termination by employer)",
+              "Written notice record requesting refund from the agency (SMS / WhatsApp screenshot can also serve as record)"
+            ],
+            rule: "If unilaterally dismissed by the employer during probation, the agency <strong>must</strong> refund or reduce <strong>50%</strong> of the service fee collected, within <strong>3 days</strong> of receiving your written notice.",
+            time: "The agency's legal duty is to refund within <strong>3 days</strong>; if it fails to refund and you complain to DSAL, DSAL's general pledge applies: <strong>20 minutes</strong> reception, <strong>5 working days</strong> inspector notice, <strong>10 working days</strong> outcome notice.",
+            law: "<strong>Article 29 of Law No. 16/2020 (Employment Agency Licensing Law) & DSAL model fee table</strong>: Licensees must refund or reduce 50% of the service fee for a person whose employment contract is unilaterally terminated, and must refund collected fees within <strong>3 days</strong> from receiving written notice from the service user."
+          }
+        ]
+      }
+    ]
+  },
+
+  pt: {
+    appTitle: "Guia de Direitos do Trabalhador em Macau",
+    appSub: "3 módulos passo a passo: Escolher caso → Ver passos → Consultar lei e entidade",
+    notice: "Conteúdo compilado com base na legislação vigente em Macau e nos compromissos de serviço da DSAL. Disponível em chinês, vietnamita, birmanês, inglês e português.",
+    modulesLabel: "Escolha a sua situação (3 módulos)",
+    startBtn: "Ver passos →",
+    backBtn: "← 3 módulos",
+    nextModuleBtn: "Concluir e ir para o próximo módulo →",
+    allDoneBtn: "Todos os módulos vistos, voltar ao início ✓",
+    lawShow: "Ver base legal e entidade ▾",
+    lawHide: "Ocultar base legal ▴",
+    labels: {
+      who: "A quem recorrer",
+      docs: "O que levar",
+      check: "Verificação",
+      rule: "Regra legal",
+      time: "Prazo de resposta",
+      law: "Base legal e entidade"
+    },
+    contactTitle: "Contactos Chave e Entidades Oficiais",
+    contacts: [
+      { tag: "Linha DSAL", html: '<a href="tel:28717810">2871 7810</a> (Direcção dos Serviços para os Assuntos Laborais · Consultas / Queixas)' },
+      { tag: "Morada DSAL", html: "Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado, n.ºs 221–279, Macau" },
+      { tag: "Migração CPSP", html: '<a href="tel:28573333">2857 3333</a> (Edifício de Migração do CPSP · Autorização de permanência)' },
+      { tag: "Emergência", html: '<a href="tel:999">999</a> (Polícia / Emergência)' }
+    ],
+    footerNote: "Apenas para referência informativa; não constitui parecer jurídico oficial. Cada caso pode variar — prevalece a resposta oficial da DSAL e do CPSP.",
+    modules: [
+      {
+        id: "mod-wage-ticket",
+        badge: "1",
+        badgeClass: "badge-1",
+        tag: "Módulo 1 · Salários e Regresso",
+        title: "Salário em falta / atraso e quem paga o regresso",
+        desc: "Salário não pago ou atrasado, e quem suporta o transporte de regresso ao fim da relação laboral.",
+        cases: [
+          {
+            title: "Caso A: Empregador não paga / atrasa o salário",
+            who: "<strong>Direcção dos Serviços para os Assuntos Laborais (DSAL)</strong><br>Morada: Edifício Advance Plaza, Av. Dr. Francisco Vieira Machado, n.ºs 221–279, Macau<br>Tel.: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Original do documento de identificação/passaporte + fotocópia",
+              "Documento com morada correcta (ex.: factura de água ou electricidade)",
+              "Nome do empregador, contacto telefónico e morada de contacto"
+            ],
+            time: "Atendimento em <strong>20 minutos</strong> com emissão imediata de «Recibo de Queixa»<br>Notificação do nome e telefone do inspector responsável por SMS/escrito em <strong>5 dias úteis</strong><br>Notificação do resultado do processo em <strong>10 dias úteis</strong>",
+            law: "<strong>Compromisso de Serviço da DSAL (PS-1390)</strong>: Atendimento do queixoso em 20 minutos; notificação do nome e contacto do inspector responsável em 5 dias úteis; notificação do resultado do processo em 10 dias úteis. A linha 2871 7810 também presta consultas laborais com resposta telefónica em 2 dias úteis."
+          },
+          {
+            title: "Caso B: Quem paga a viagem de regresso à origem?",
+            who: "Solicitar primeiro ao empregador; se não pagar, apresentar queixa na <strong>DSAL</strong>: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Documento de identificação e dados do Cartão de Trabalhador Não Residente («cartão azul»)",
+              "Contrato de trabalho ou registo da cessação da relação de trabalho"
+            ],
+            time: "O direito aplica-se na cessação da relação de trabalho; em caso de queixa na DSAL por recusa de pagamento, aplica-se o prazo de tratamento de queixas da DSAL (20 min de atendimento, 5 dias úteis para inspector, 10 dias úteis para resultado).",
+            law: "<strong>N.ºs 1 e 4 do artigo 26.º da Lei n.º 21/2009 (Lei da Contratação de Trabalhadores Não Residentes)</strong>: O trabalhador não residente tem direito, aquando da cessação da relação de trabalho, a exigir do empregador o pagamento das despesas de transporte para o local de origem, independentemente da forma de cessação (caducidade, resolução com ou sem justa causa, ou iniciativa do trabalhador)."
+          }
+        ]
+      },
+      {
+        id: "mod-bluecard",
+        badge: "2",
+        badgeClass: "badge-2",
+        tag: "Módulo 2 · «Cartão Azul» e Despedimento",
+        title: "Fui despedido: o que acontece ao «cartão azul»?",
+        desc: "Despedimento unilateral antes do fim do contrato — como agir quanto ao «cartão azul» e permanência.",
+        cases: [
+          {
+            title: "Passos sobre o «cartão azul» e permanência após despedimento",
+            who: "1. <strong>Ir primeiro à DSAL</strong> para abrir processo e obter comprovativo, Tel.: <a href=\"tel:28717810\">2871 7810</a><br>2. <strong>Consultar depois a situação de permanência no Edifício de Migração do CPSP</strong>, Tel.: <a href=\"tel:28573333\">2857 3333</a>",
+            docs: [
+              "Original do «cartão azul» (Título de Identificação de Trabalhador Não Residente)",
+              "Aviso de despedimento ou documento comprovativo da cessação unilateral",
+              "Documento de identificação"
+            ],
+            time: "Os dias de permanência restantes <strong>não têm um número fixo único</strong> para todos os casos; dependem da validade do cartão e das circunstâncias da cessação. Ação essencial: <strong>abrir processo na DSAL com rapidez</strong>, obter comprovativo e confirmar junto da Migração se se aplica excepção ao limite de 6 meses.",
+            law: "<strong>Artigo 4.º da Lei n.º 21/2009 (Lei da Contratação de Trabalhadores Não Residentes)</strong>: Após a revogação ou caducidade da autorização de permanência, não é emitida nova autorização durante 6 meses, em regra. Excepções aplicam-se (ex.: caducidade do contrato, resolução pelo empregador sem justa causa ou pelo trabalhador com justa causa); no despedimento sem justa causa ou resolução com justa causa pelo trabalhador, o comprovativo emitido pela DSAL serve de prova."
+          }
+        ]
+      },
+      {
+        id: "mod-agency",
+        badge: "3",
+        badgeClass: "badge-3",
+        tag: "Módulo 3 · Taxas de Agência e Reembolso",
+        title: "Cobrança excessiva / Despedido no período experimental sem reembolso",
+        desc: "Verificar limites e prazos de cobrança, e pedir o reembolso de 50% se for despedido no período experimental.",
+        cases: [
+          {
+            title: "Caso A: Agência cobrou demasiado / cobrou cedo demais",
+            who: "<strong>Direcção dos Serviços para os Assuntos Laborais (DSAL)</strong> (queixa por infracção de taxas de agência de emprego), Tel.: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Contrato / recibo assinado com a agência de emprego",
+              "Comprovativos de transferência ou pagamento (se existirem)",
+              "O seu documento de identificação"
+            ],
+            check: "Limite legal: <strong>não superior a 50% da remuneração de base do primeiro mês</strong> do contrato de trabalho, cobrada apenas uma vez <strong>após 60 dias</strong> do início da relação laboral. Cobrar dentro de 60 dias ou acima de 50% é irregular.",
+            time: "Segue o compromisso geral de queixas da DSAL: atendimento em <strong>20 minutos</strong>, notificação do inspector em <strong>5 dias úteis</strong> e do resultado em <strong>10 dias úteis</strong>.",
+            law: "<strong>Lei n.º 16/2020 (Lei das Agências de Emprego)</strong>: A taxa de serviço cobrada ao trabalhador não pode exceder 50% da remuneração de base do primeiro mês do contrato de trabalho e só pode ser cobrada uma única vez após 60 dias do início da relação laboral; as infracções são puníveis."
+          },
+          {
+            title: "Caso B: Despedido no período experimental, agência não reembolsa",
+            who: "<strong>Direcção dos Serviços para os Assuntos Laborais (DSAL)</strong>, Tel.: <a href=\"tel:28717810\">2871 7810</a>",
+            docs: [
+              "Recibo da taxa cobrada pela agência",
+              "Contrato de trabalho",
+              "Aviso de despedimento (ou prova de cessação unilateral pelo empregador)",
+              "Registo de notificação escrita à agência a pedir o reembolso (captura de SMS / WhatsApp pode servir de registo)"
+            ],
+            rule: "Em caso de cessação unilateral pelo empregador no período experimental, a agência <strong>deve</strong> reembolsar ou reduzir <strong>50%</strong> da taxa de serviço cobrada, no prazo de <strong>3 dias</strong> após receber a sua notificação escrita.",
+            time: "O dever legal da agência é reembolsar em <strong>3 dias</strong>; se não o fizer e apresentar queixa na DSAL, aplica-se o compromisso geral: <strong>20 minutos</strong> de atendimento, <strong>5 dias úteis</strong> para inspector e <strong>10 dias úteis</strong> para resultado.",
+            law: "<strong>Artigo 29.º da Lei n.º 16/2020 (Lei das Agências de Emprego) e tabela de taxas modelo da DSAL</strong>: Os titulares de licença devem reembolsar ou reduzir em 50% a taxa de serviço a quem tenha o contrato de trabalho cessado unilateralmente, devendo devolver o montante cobrado no prazo de <strong>3 dias</strong> a contar da recepção da notificação escrita do utente."
+          }
+        ]
+      }
+    ]
+  }
+};
+
+let currentLang = "zh";
+let activeModuleIndex = null;
+
+function setLang(lang) {
+  currentLang = lang;
+  const langAttrMap = { zh: "zh-Hans", vi: "vi", my: "my", en: "en", pt: "pt" };
+  document.documentElement.lang = langAttrMap[lang] || "en";
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+  });
+  updatePwaText();
+  renderAll();
+}
+
+function renderAll() {
+  const t = i18n[currentLang];
+  document.getElementById("appTitle").textContent = t.appTitle;
+  document.getElementById("appSub").textContent = t.appSub;
+  document.getElementById("noticeBox").textContent = t.notice;
+  document.getElementById("modulesLabel").textContent = t.modulesLabel;
+  document.getElementById("backBtn").textContent = t.backBtn;
+  document.getElementById("contactTitle").textContent = t.contactTitle;
+  document.getElementById("footerNote").textContent = t.footerNote;
+
+  const grid = document.getElementById("moduleGrid");
+  grid.innerHTML = t.modules.map((m, idx) => `
+    <div class="module-tile" onclick="openModule(${idx})">
+      <div class="module-badge ${m.badgeClass}">${m.badge}</div>
+      <div class="module-info">
+        <span class="module-tag">${m.tag}</span>
+        <h2>${m.title}</h2>
+        <div class="desc">${m.desc}</div>
+      </div>
+      <div class="module-cta">${t.startBtn}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("contactRows").innerHTML = t.contacts.map(c => `
+    <div class="contact-row">
+      <span class="tag">${c.tag}</span>
+      <span>${c.html}</span>
+    </div>
+  `).join("");
+
+  if (activeModuleIndex !== null) {
+    renderLesson(activeModuleIndex);
+  }
+}
+
+function openModule(idx) {
+  activeModuleIndex = idx;
+  document.getElementById("homeView").classList.add("hidden");
+  document.getElementById("lessonView").classList.add("active");
+  renderLesson(idx);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function goHome() {
+  activeModuleIndex = null;
+  document.getElementById("lessonView").classList.remove("active");
+  document.getElementById("homeView").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function nextModule() {
+  const total = i18n[currentLang].modules.length;
+  if (activeModuleIndex < total - 1) {
+    openModule(activeModuleIndex + 1);
+  } else {
+    goHome();
+  }
+}
+
+function renderLesson(idx) {
+  const t = i18n[currentLang];
+  const m = t.modules[idx];
+  const total = t.modules.length;
+
+  document.getElementById("progressBar").style.width = `${Math.round(((idx + 1) / total) * 100)}%`;
+  document.getElementById("stepCounter").textContent = `${idx + 1} / ${total}`;
+  document.getElementById("lessonTitle").textContent = `${m.tag} · ${m.title}`;
+  document.getElementById("lessonDesc").textContent = m.desc;
+
+  const isLast = idx === total - 1;
+  document.getElementById("nextModuleBtn").textContent = isLast ? t.allDoneBtn : t.nextModuleBtn;
+
+  const container = document.getElementById("lessonStepsContainer");
+  container.innerHTML = m.cases.map((c, cIdx) => {
+    const docsHtml = `<ul class="doc-list">${c.docs.map(d => `<li>${d}</li>`).join("")}</ul>`;
+    const checkHtml = c.check ? `
+      <div class="step-row">
+        <div class="step-pill warn">${t.labels.check}</div>
+        <div class="step-body">${c.check}</div>
+      </div>` : "";
+    const ruleHtml = c.rule ? `
+      <div class="step-row">
+        <div class="step-pill warn">${t.labels.rule}</div>
+        <div class="step-body">${c.rule}</div>
+      </div>` : "";
+
+    return `
+      <div class="sub-card">
+        <div class="sub-title">${c.title}</div>
+
+        <div class="step-row">
+          <div class="step-pill">${t.labels.who}</div>
+          <div class="step-body">${c.who}</div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-pill">${t.labels.docs}</div>
+          <div class="step-body">${docsHtml}</div>
+        </div>
+
+        ${checkHtml}
+        ${ruleHtml}
+
+        <div class="step-row">
+          <div class="step-pill">${t.labels.time}</div>
+          <div class="step-body">
+            <div class="time-box">${c.time}</div>
+            <span class="law-toggle" onclick="toggleLawBox(this, 'law-${idx}-${cIdx}')">${t.lawShow}</span>
+            <div class="law-box" id="law-${idx}-${cIdx}">${c.law}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function toggleLawBox(el, boxId) {
+  const box = document.getElementById(boxId);
+  const isOpen = box.classList.toggle("show");
+  const t = i18n[currentLang];
+  el.textContent = isOpen ? t.lawHide : t.lawShow;
+}
+
+/* ================= PWA 安装按钮与引导 ================= */
+
+const pwaText = {
+  zh: {
+    install: "📲 安装到手机",
+    iosTitle: "添加到主屏幕",
+    iosDesc: "苹果手机不支持网页直接安装，请按以下两步操作：",
+    iosStep1: "点 Safari 底部的分享按钮 ⬆️",
+    iosStep2: "选择「添加到主屏幕」",
+    desktopHint: "请在浏览器菜单中查找「安装应用」或「添加到主屏幕」。"
+  },
+  vi: {
+    install: "📲 Cài đặt ứng dụng",
+    iosTitle: "Thêm vào màn hình chính",
+    iosDesc: "iPhone không hỗ trợ cài đặt trực tiếp từ trang web. Vui lòng làm theo 2 bước:",
+    iosStep1: "Nhấn nút Chia sẻ ⬆️ ở cuối Safari",
+    iosStep2: "Chọn «Thêm vào MH chính»",
+    desktopHint: "Vui lòng tìm «Cài đặt ứng dụng» hoặc «Thêm vào màn hình chính» trong menu trình duyệt."
+  },
+  my: {
+    install: "📲 အက်ပ် ထည့်သွင်းရန်",
+    iosTitle: "ပင်မမျက်နှာပြင်သို့ ထည့်ရန်",
+    iosDesc: "iPhone တွင် ဝဘ်မှ တိုက်ရိုက် ထည့်သွင်း၍ မရပါ။ အောက်ပါ ၂ ဆင့်ကို လုပ်ဆောင်ပါ -",
+    iosStep1: "Safari အောက်ခြေရှိ မျှဝေခလုတ် ⬆️ ကို နှိပ်ပါ",
+    iosStep2: "«ပင်မမျက်နှာပြင်သို့ ထည့်ပါ» ကို ရွေးပါ",
+    desktopHint: "ဘရောက်ဇာ မီနူးတွင် «အက်ပ် ထည့်သွင်းရန်» သို့မဟုတ် «ပင်မမျက်နှာပြင်သို့ ထည့်ရန်» ကို ရှာပါ။"
+  },
+  en: {
+    install: "📲 Install app",
+    iosTitle: "Add to Home Screen",
+    iosDesc: "iPhone does not support direct web install. Please follow these 2 steps:",
+    iosStep1: "Tap the Share button ⬆️ at the bottom of Safari",
+    iosStep2: "Choose «Add to Home Screen»",
+    desktopHint: "Please look for «Install app» or «Add to Home Screen» in your browser menu."
+  },
+  pt: {
+    install: "📲 Instalar app",
+    iosTitle: "Adicionar ao ecrã principal",
+    iosDesc: "O iPhone não suporta instalação directa pela web. Siga estes 2 passos:",
+    iosStep1: "Toque no botão Partilhar ⬆️ no fundo do Safari",
+    iosStep2: "Escolha «Adicionar ao ecrã principal»",
+    desktopHint: "Procure «Instalar app» ou «Adicionar ao ecrã principal» no menu do navegador."
+  }
+};
+
+function updatePwaText() {
+  const t = pwaText[currentLang] || pwaText.en;
+  const btn = document.getElementById("pwaInstallBtn");
+  if (btn) btn.textContent = t.install;
+  const g1 = document.getElementById("iosGuideTitle");
+  const g2 = document.getElementById("iosGuideDesc");
+  const g3 = document.getElementById("iosGuideStep1");
+  const g4 = document.getElementById("iosGuideStep2");
+  if (g1) g1.textContent = t.iosTitle;
+  if (g2) g2.textContent = t.iosDesc;
+  if (g3) g3.textContent = t.iosStep1;
+  if (g4) g4.textContent = t.iosStep2;
+}
+
+// 注册 Service Worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(err => {
+      console.warn("Service Worker 注册失败：", err);
+    });
+  });
+}
+
+(function () {
+  const btn = document.getElementById("pwaInstallBtn");
+  const iosGuide = document.getElementById("iosInstallGuide");
+
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  // 已安装模式下不显示按钮
+  if (isStandalone) return;
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    btn.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    btn.hidden = true;
+    closeIosGuide();
+  });
+
+  if (isIOS) {
+    btn.hidden = false;
+  }
+
+  window.handleInstallClick = async function () {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") btn.hidden = true;
+      deferredPrompt = null;
+    } else if (isIOS) {
+      iosGuide.classList.add("show");
+    } else {
+      alert((pwaText[currentLang] || pwaText.en).desktopHint);
+    }
+  };
+})();
+
+function closeIosGuide() {
+  document.getElementById("iosInstallGuide").classList.remove("show");
+}
+
+updatePwaText();
+renderAll();
+</script>
+</body>
+</html>

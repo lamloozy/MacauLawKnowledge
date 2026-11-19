@@ -1,0 +1,21 @@
+{
+  "name": "澳门外雇权益助手",
+  "short_name": "外雇权益",
+  "description": "澳门外地雇员权益分步指引：欠薪与回程机票、蓝卡与解雇、中介收费与退费。",
+  "lang": "zh-Hans",
+  "start_url": "./",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f6f9",
+  "theme_color": "#0b5e8a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
